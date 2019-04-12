@@ -5,6 +5,7 @@
 set -e
 
 BPLOG_PREFIX="buildpack.gradle"
+GRADLE_VERSION="5.2.1"
 
 BP_DIR=$(cd $(dirname $0)/..; pwd) # absolute path
 BIN_DIR=$BP_DIR/bin
@@ -65,6 +66,12 @@ if [ ! -f $BUILD_DIR/gradlew ] ; then
 fi
 BUILDCMD="./gradlew"
 chmod +x ${BUILD_DIR}/gradlew
+
+echo "distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists" > /app/gradle/wrapper/gradle-wrapper.properties
 
 BUILDCMD="$BUILDCMD $GRADLE_TASK"
 
