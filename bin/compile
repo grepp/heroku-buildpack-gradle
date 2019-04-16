@@ -6,6 +6,11 @@ set -e
 
 BPLOG_PREFIX="buildpack.gradle"
 GRADLE_VERSION="5.2.1"
+GRADLE_HASH="9lc4nzslqh3ep7ml2tp68fk8s"
+
+BINARIES_PATH="/tmp/binaries"
+CACHE_PATH="/tmp/cache/.gradle/wrapper/dists/gradle-${GRADLE_VERSION}-bin/${GRADLE_HASH}"
+GRADLE_BIN="gradle-${GRADLE_VERSION}-bin.zip"
 
 BP_DIR=$(cd $(dirname $0)/..; pwd) # absolute path
 BIN_DIR=$BP_DIR/bin
@@ -22,6 +27,10 @@ source $LIB_DIR/failures.sh
 source <(curl --retry 3 -fsSL $BUILDPACK_STDLIB_URL)
 
 export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
+
+# Copy local Gradle binary to cache path.
+mkdir -p ${CACHE_PATH}
+cp ${BINARIES_PATH}/${GRADLE_BIN} ${CACHE_PATH}/${GRADLE_BIN}
 
 if has_stage_task $BUILD_DIR; then
   mcount "task.stage"
